@@ -1,0 +1,27 @@
+body 
+{
+    background-color:  #f5f5f5 ;
+    font-family: Verdana, sans-serif;
+    margin-left: auto;
+    margin-right: auto;
+    width: 80%;
+}
+
+p 
+{
+    color:  #636363; font: Verdana;
+    text-align:justify;
+}
+      
+h1{
+    text-align:center;
+}
+     
+h2 
+{
+    text-align:center;
+    
+    margin-top: 70px;
+    margin-bottom: 70px;
+}
+      

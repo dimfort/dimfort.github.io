@@ -4,18 +4,20 @@
     <meta charset="utf-8">
     <title>Narration web | Ballé - Fort</title>
     <script src="https://d3js.org/d3.v4.js"></script>
+    <link rel="stylesheet" type="text/css" href="narration.css">
+    
   </head>
   <body>
     <h1>Le All-Star Game NBA entre 2000 à 2016</h1>
     <h2>Présentation du jeu de données</h2>
     <p>Le jeu de données utilisé regroupe les informations sur les joueurs ayant participés aux All-Star Games de NBA entre les années 2000 et 2016. Ces informations regroupent pour chaque joueur leur équipe, leurs informations physiques et les informations sur leur draft.
-    </br>
+    </br></br>
       Nous nous sommes donc intéréssés à ce jeu de données afin de voir si durant ces 17 années, des tendances se dégageaient dans le style de jeu en mettant en avant les données physiques des joueurs. De plus, nous allons nous intéréssés aux joueurs et équipes les plus représentés lors de ces 17 années.</p>
   <h2>Les équipes présentes aux All-Star Games</h2>
   <p>La première question à laquelle nous avons voulu répondre est celle des équipes et de leur représentation sur les 17 All-Star Games.
-  </br>
+  </br></br>
     L'histogramme présenté comporte donc les 34 équipes et le nombre de joueurs appelés aux All-Star Game. Les 17 années sont séparées en 4 périodes, qui permettent de se rendre compte de la domination des équipes sur certaines périodes.
-  </br>
+  </br></br>
     On peut notamment voir que les Phoenix Suns ont connu Une très bonne période de 10 ans entre 2000 et 2011. Cependant, ils n'ont plus aucune séléction depuis cette année là. Au contraire, on s'aperçoit que les Golden State Warriorsn'ont connu des séléctions que depuis 2012, mais avec un grand nombre de séléctions. Cela permet donc d'appuyer leurs récentes performances.</p>
     <div id="teams"></div>
     <h2>Les joueurs présents aux All-Star Games</h2>
@@ -25,13 +27,13 @@
     <div id="players"></div>
     <h2>La masse des joueurs lors des All-Star Games</h2>
     <p>Nous allons maintenant passer à la troisième et dernière question qui est sur le physique des joueurs et l'évolution potentielle du style de jeu et des tendances annuelles.
-    </br>
+    </br></br>
       Ici, nous pouvons observer la masse en kilogrammes des joueurs. Tout comme le premier histogramme, les 17 années sont découpées en 4 périodes. La première information qui ressort est que la dernière période, entre 2012 et 2016, est moins éparpillée en termes de masses. Cela peut s'expliquer par la normalisation des joueurs, ou aujourd'hui les meneurs peuvent être très grands par exemple, et donc plus lourd. Nous allons voir si cette tendance s'accentue avec les tailles dans la page suivante.</p>
     <div id="weight"></div>
     <h2>Le taille des joueurs lors des All-Star Games</h2>
     <p>
       Nous avons donc maintenant la taille des joueurs sélectionnés aux All-Star Games. Mis à part un joueur qui se trouve dans la tranche entre 1 mètre 74 et et 1 mètre 77, on peut voir que la tendance récente de l'uniformisation des joueurs se confirme. Les tailles entre 2 mètres et 2 mètres 13 sont donc un peu plus représentées dans les 4 dernières années.
-    </br>
+    </br></br>
 Les postes de joueurs sont donc maintenant beaucoup moins liés aux physiques des joueurs. Un joueur grand peut très bien être au poste de meneur, tandis qu'il n'aurait jamais pu le faire quelques années auparavant.
     </p>
     <div id="height"></div>
@@ -46,8 +48,8 @@ Les postes de joueurs sont donc maintenant beaucoup moins liés aux physiques de
         // append the svg object to the body of the page
         var svgTeams = d3.select("#teams")
           .append("svg")
-            .attr("width", width + margin.left + margin.right)
-            .attr("height", height + margin.top + margin.bottom)
+            .attr("width", width+ 800 + margin.left + margin.right)
+            .attr("height", height+ 100+ margin.top + margin.bottom)
           .append("g")
             .attr("transform",
                   "translate(" + margin.left + "," + margin.top + ")");
@@ -55,7 +57,7 @@ Les postes de joueurs sont donc maintenant beaucoup moins liés aux physiques de
         var svgPlayers = d3.select("#players")
           .append("svg")
             .attr("width", width + margin.left + margin.right)
-            .attr("height", height + margin.top + margin.bottom)
+            .attr("height", height + 50 + margin.top + margin.bottom)
           .append("g")
             .attr("transform",
                   "translate(" + margin.left + "," + margin.top + ")");
