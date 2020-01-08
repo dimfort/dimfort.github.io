@@ -6,17 +6,70 @@
     <script src="https://d3js.org/d3.v4.js"></script>
   </head>
   <body>
-    <div id="my_dataviz"></div>
+    <h1>Le All-Star Game NBA entre 2000 à 2016</h1>
+    <h2>Présentation du jeu de données</h2>
+    <p>Le jeu de données utilisé regroupe les informations sur les joueurs ayant participés aux All-Star Games de NBA entre les années 2000 et 2016. Ces informations regroupent pour chaque joueur leur équipe, leurs informations physiques et les informations sur leur draft.
+    </br>
+      Nous nous sommes donc intéréssés à ce jeu de données afin de voir si durant ces 17 années, des tendances se dégageaient dans le style de jeu en mettant en avant les données physiques des joueurs. De plus, nous allons nous intéréssés aux joueurs et équipes les plus représentés lors de ces 17 années.</p>
+  <h2>Les équipes présentes aux All-Star Games</h2>
+  <p>La première question à laquelle nous avons voulu répondre est celle des équipes et de leur représentation sur les 17 All-Star Games.
+  </br>
+    L'histogramme présenté comporte donc les 34 équipes et le nombre de joueurs appelés aux All-Star Game. Les 17 années sont séparées en 4 périodes, qui permettent de se rendre compte de la domination des équipes sur certaines périodes.
+  </br>
+    On peut notamment voir que les Phoenix Suns ont connu Une très bonne période de 10 ans entre 2000 et 2011. Cependant, ils n'ont plus aucune séléction depuis cette année là. Au contraire, on s'aperçoit que les Golden State Warriorsn'ont connu des séléctions que depuis 2012, mais avec un grand nombre de séléctions. Cela permet donc d'appuyer leurs récentes performances.</p>
+    <div id="teams"></div>
+    <h2>Les joueurs présents aux All-Star Games</h2>
+    <p>
+        Dans ce nouvel histogramme, on peut observer les joueurs ayant été sélectionnés avec une équipe en particulier. Pour cela, il suffit de cliquer sur une des équipes sur le graphe précédent. Cela va charger les données sur les joueurs ayant joués pour cette équipe et comptant au moins une sélection au All-Star Game.
+    </p>
+    <div id="players"></div>
+    <h2>La masse des joueurs lors des All-Star Games</h2>
+    <p>Nous allons maintenant passer à la troisième et dernière question qui est sur le physique des joueurs et l'évolution potentielle du style de jeu et des tendances annuelles.
+    </br>
+      Ici, nous pouvons observer la masse en kilogrammes des joueurs. Tout comme le premier histogramme, les 17 années sont découpées en 4 périodes. La première information qui ressort est que la dernière période, entre 2012 et 2016, est moins éparpillée en termes de masses. Cela peut s'expliquer par la normalisation des joueurs, ou aujourd'hui les meneurs peuvent être très grands par exemple, et donc plus lourd. Nous allons voir si cette tendance s'accentue avec les tailles dans la page suivante.</p>
+    <div id="weight"></div>
+    <h2>Le taille des joueurs lors des All-Star Games</h2>
+    <p>
+      Nous avons donc maintenant la taille des joueurs sélectionnés aux All-Star Games. Mis à part un joueur qui se trouve dans la tranche entre 1 mètre 74 et et 1 mètre 77, on peut voir que la tendance récente de l'uniformisation des joueurs se confirme. Les tailles entre 2 mètres et 2 mètres 13 sont donc un peu plus représentées dans les 4 dernières années.
+    </br>
+Les postes de joueurs sont donc maintenant beaucoup moins liés aux physiques des joueurs. Un joueur grand peut très bien être au poste de meneur, tandis qu'il n'aurait jamais pu le faire quelques années auparavant.
+    </p>
+    <div id="height"></div>
     <script>
 
 
         // set the dimensions and margins of the graph
         var margin = {top: 30, right: 30, bottom: 70, left: 60},
-            width = 460 - margin.left - margin.right,
-            height = 400 - margin.top - margin.bottom;
+            width = 1000 - margin.left - margin.right,
+            height = 600 - margin.top - margin.bottom;
         
         // append the svg object to the body of the page
-        var svg = d3.select("#my_dataviz")
+        var svgTeams = d3.select("#teams")
+          .append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+          .append("g")
+            .attr("transform",
+                  "translate(" + margin.left + "," + margin.top + ")");
+
+        var svgPlayers = d3.select("#players")
+          .append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+          .append("g")
+            .attr("transform",
+                  "translate(" + margin.left + "," + margin.top + ")");
+
+
+        var svgWeight = d3.select("#weight")
+          .append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+          .append("g")
+            .attr("transform",
+                  "translate(" + margin.left + "," + margin.top + ")");
+
+        var svgHeight = d3.select("#height")
           .append("svg")
             .attr("width", width + margin.left + margin.right)
             .attr("height", height + margin.top + margin.bottom)
@@ -25,19 +78,92 @@
                   "translate(" + margin.left + "," + margin.top + ")");
         
         // Parse the Data
-        d3.tsv("data_extrait.tsv", function(data) {
+        d3.tsv("data.tsv", function(data) {
         
-          // sort data
-          data.sort(function(b, a) {
-            return a.HeightClass - b.HeightClass;
+          var actualTeam = "Golden State Warriors";
+          var map = new Map();
+
+          var teamsNumbers = new Map();
+          var playersNumbers = new Map();
+          var weightNumbers = new Map();
+          var heightNumbers = new Map();
+
+
+
+          data.forEach(element => {
+
+            if (teamsNumbers.has(element.Team)) {
+              teamsNumbers.set(element.Team, teamsNumbers.get(element.Team)+1);
+            } else {
+              teamsNumbers.set(element.Team, 1);
+            }
+
+            if (playersNumbers.has(element.Player)) {
+              map = playersNumbers.get(element.Player);
+              if (map.has(element.Team)) {
+                playersNumbers.set(element.Player, map.set(element.Team, map.get(element.Team)+1));
+              } else {
+                playersNumbers.set(element.Player, map.set(element.Team,1));
+              }
+            } else {
+              playersNumbers.set(element.Player, new Map().set(element.Team,1));
+            }
+
+            if (weightNumbers.has(element.WeightClass)) {
+              weightNumbers.set(element.WeightClass, weightNumbers.get(element.WeightClass)+1);
+            } else {
+              weightNumbers.set(element.WeightClass, 1);
+            }
+
+            if (heightNumbers.has(element.HeightClass)) {
+              heightNumbers.set(element.HeightClass, heightNumbers.get(element.HeightClass)+1);
+            } else {
+              heightNumbers.set(element.HeightClass, 1);
+            }
+
           });
-        
-          // X axis
+
+
+          var playersArr = new Map();
+
+          sortedTeams = Array.from( teamsNumbers.entries() ).sort(function(b, a) {
+            return a[1] - b[1];
+          });
+
+          var teamsNames = new Array();
+
+          sortedTeams.forEach(element => {
+            teamsNames.push(element[0]);
+          })
+
+
+          sortedWeight = Array.from( weightNumbers.entries() ).sort(function(b, a) {
+            return b[0] - a[0];
+          });
+
+          var WeightNames = new Array();
+
+          sortedWeight.forEach(element => {
+            WeightNames.push(element[0]);
+          })
+
+          sortedHeight = Array.from( heightNumbers.entries() ).sort(function(b, a) {
+            return b[0] - a[0];
+          });
+
+          var HeightNames = new Array();
+
+          sortedHeight.forEach(element => {
+            HeightNames.push(element[0]);
+          })
+
+          /* Teams */
+
           var x = d3.scaleBand()
             .range([ 0, width ])
-            .domain(data.map(function(d) { return d.Player; }))
+            .domain(teamsNames)
             .padding(0.2);
-          svg.append("g")
+          svgTeams.append("g")
             .attr("transform", "translate(0," + height + ")")
             .call(d3.axisBottom(x))
             .selectAll("text")
@@ -46,24 +172,150 @@
         
           // Add Y axis
           var y = d3.scaleLinear()
-            .domain([0, 250])
+            .domain([0, 30])
             .range([ height, 0]);
-          svg.append("g")
+          svgTeams.append("g")
             .call(d3.axisLeft(y));
         
           // Bars
-          svg.selectAll("mybar")
-            .data(data)
+          svgTeams.selectAll("mybar")
+            .data(sortedTeams)
             .enter()
             .append("rect")
-              .attr("x", function(d) { return x(d.Player); })
-              .attr("y", function(d) { return y(d.HeightClass); })
+              .attr("x", function(d) { return x(d[0]); })
+              .attr("y", function(d) { return y(d[1]); })
               .attr("width", x.bandwidth())
-              .attr("height", function(d) { return height - y(d.HeightClass); })
-              .attr("fill", "#69b3a2")
+              .attr("height", function(d) { return height - y(d[1]); })
+              .attr("fill", "#cf2500").on("click",function(d){
+                actualTeam = d[0];
+                updatePlayers();
+              })
+              
+
+
+
+          /* PLayers */
         
-        })
+            function updatePlayers() {
+
+
+              svgPlayers.selectAll("*")
+            .remove()
+
+              playersArr.clear();
+
+              Array.from(playersNumbers.entries()).forEach(element => {
+                  if (element[1].has(actualTeam)) {
+                    playersArr.set(element[0], element[1].get(actualTeam));
+                  }
+                });
+
+                console.log(playersArr);
+
+            // Barsvar 
+            x1 = d3.scaleBand()
+            .range([ 0, width ])
+            .domain(Array.from(playersArr.keys()))
+            .padding(0.2);
+            svgPlayers.append("g")
+            .attr("transform", "translate(0," + height + ")")
+            .call(d3.axisBottom(x1))
+            .selectAll("text")
+              .attr("transform", "translate(-10,0)rotate(-45)")
+              .style("text-anchor", "end");
         
+          // Add Y axis
+          var y1 = d3.scaleLinear()
+            .domain([0, Math.max(...playersArr.values())])
+            .range([ height, 0]);
+            svgPlayers.append("g")
+            .call(d3.axisLeft(y1));
+
+          svgPlayers.selectAll("mybar")
+            .data(Array.from( playersArr.entries() ))
+            .enter()
+            .append("rect")
+              .attr("x", function(d) { return x1(d[0]); })
+              .attr("y", function(d) { return y1(d[1]); })
+              .attr("width", x1.bandwidth())
+              .attr("height", function(d) { return height - y1(d[1]); })
+              .attr("fill", "#2e00a7")
+          }
+          
+        updatePlayers();
+       
+        
+        /* Weight */
+
+        var x2 = d3.scaleBand()
+            .range([ 0, width ])
+            .domain(WeightNames)
+            .padding(0.2);
+            svgWeight.append("g")
+            .attr("transform", "translate(0," + height + ")")
+            .call(d3.axisBottom(x2))
+            .selectAll("text")
+              .attr("transform", "translate(-10,0)rotate(-45)")
+              .style("text-anchor", "end");
+        
+          // Add Y axis
+          var y2 = d3.scaleLinear()
+            .domain([0, 100])
+            .range([ height, 0]);
+            svgWeight.append("g")
+            .call(d3.axisLeft(y2));
+        
+          // Bars
+          svgWeight.selectAll("mybar")
+            .data(sortedWeight)
+            .enter()
+            .append("rect")
+              .attr("x", function(d) { return x2(d[0]); })
+              .attr("y", function(d) { return y2(d[1]); })
+              .attr("width", x2.bandwidth())
+              .attr("height", function(d) { return height - y2(d[1]); })
+              .attr("fill", "#009431")
+
+
+        /* Height */
+
+            var x3 = d3.scaleBand()
+            .range([ 0, width ])
+            .domain(HeightNames)
+            .padding(0.2);
+            svgHeight.append("g")
+            .attr("transform", "translate(0," + height + ")")
+            .call(d3.axisBottom(x3))
+            .selectAll("text")
+              .attr("transform", "translate(-10,0)rotate(-45)")
+              .style("text-anchor", "end");
+        
+          // Add Y axis
+          var y3 = d3.scaleLinear()
+            .domain([0, 100])
+            .range([ height, 0]);
+            svgHeight.append("g")
+            .call(d3.axisLeft(y3));
+        
+
+          // Bars
+          svgHeight.selectAll("mybar")
+            .data(sortedHeight)
+            .enter()
+            .append("rect")
+              .attr("x", function(d) { return x3(d[0]); })
+              .attr("y", function(d) { return y3(d[1]); })
+              .attr("width", x3.bandwidth())
+              .attr("height", function(d) { return height - y3(d[1]); })
+              .attr("fill", "#f1bb00")
+           
+            
+          
+
+        
+            
+         
+      })
         </script>
   </body>
 </html>
